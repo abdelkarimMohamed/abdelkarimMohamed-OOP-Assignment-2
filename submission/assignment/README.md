@@ -2,8 +2,8 @@
 
 | | |
 |---|---|
-| **Name** | Yahya — *add full name* |
-| **Student ID** | *add your ID* |
+| **Name** | Abdelkarim Mohamed  —  |
+    | **Student ID** | *abdelkarimMohamed * |
 | **Track** | Backend .NET |
 
 ## How to run
