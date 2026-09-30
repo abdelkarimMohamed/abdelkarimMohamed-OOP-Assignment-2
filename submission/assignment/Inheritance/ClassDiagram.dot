@@ -1,0 +1,94 @@
+digraph Library {
+  graph [rankdir=BT, splines=spline, nodesep=0.5, ranksep=0.9, fontname="Helvetica", bgcolor="white", pad=0.4,
+         label=<<B>City Library — Class Diagram</B><BR/><FONT POINT-SIZE="11">Parents have protected constructors (cannot be created with new). Hollow triangle = inheritance.</FONT>>, labelloc=t, fontsize=20];
+  node  [shape=plain, fontname="Helvetica", fontsize=11];
+  edge  [fontname="Helvetica", fontsize=11];
+
+  Person [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="#EEF2FF">
+    <TR><TD BGCOLOR="#C7D2FE"><I>«protected ctor»</I><BR/><B>Person</B></TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT">+ PersonId : string {readOnly}<BR/>+ FullName : string {readOnly}<BR/>+ Phone : string {readOnly}</TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT"># Person(personId, fullName, phone)</TD></TR></TABLE>>];
+
+  Member [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="#EEF2FF">
+    <TR><TD BGCOLOR="#C7D2FE"><I>«protected ctor»</I><BR/><B>Member</B></TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT">- _loans : List&lt;Loan&gt;<BR/>+ MaxActiveLoans : int {readOnly}<BR/>+ LateFeeDiscountPercent : decimal {readOnly}<BR/>+ Loans : IReadOnlyList&lt;Loan&gt; {readOnly}<BR/>+ ActiveLoanCount : int {computed}</TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT"># Member(id, name, phone, maxActiveLoans, discountPercent)<BR/>+ Borrow(item : LibraryItem, borrowDate : DateTime) : Loan</TD></TR></TABLE>>];
+
+  Student [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+    <TR><TD BGCOLOR="#E5E7EB"><B>StudentMember</B></TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT">- StudentMaxLoans = 3 {const}<BR/>- StudentDiscountPercent = 0 {const}</TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT">+ StudentMember(id, name, phone)</TD></TR></TABLE>>];
+
+  Premium [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+    <TR><TD BGCOLOR="#E5E7EB"><B>PremiumMember</B></TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT">- PremiumMaxLoans = 10 {const}<BR/>- PointsPerReturnedLoan = 5 {const}<BR/>+ ReadingPoints : int {computed}</TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT">+ PremiumMember(id, name, phone, discountPercent)</TD></TR></TABLE>>];
+
+  Staff [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="#EEF2FF">
+    <TR><TD BGCOLOR="#C7D2FE"><I>«protected ctor»</I><BR/><B>Staff</B></TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT">- _responsibilityAllowance : decimal {readOnly}<BR/>+ HireDate : DateTime {readOnly}<BR/>+ MonthlySalary : decimal {private set}</TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT"># Staff(id, name, phone, hireDate, salary, allowance)<BR/>+ GiveRaise(percent : decimal) : void<BR/>+ GetMonthlyPay() : decimal</TD></TR></TABLE>>];
+
+  Librarian [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+    <TR><TD BGCOLOR="#E5E7EB"><B>Librarian</B></TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT">- NoAllowance = 0 {const}</TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT">+ Librarian(id, name, phone, hireDate, salary)<BR/>+ ProcessReturn(loan : Loan, returnDate : DateTime) : void<BR/>+ MarkAsLost(loan : Loan) : void</TD></TR></TABLE>>];
+
+  Shelver [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+    <TR><TD BGCOLOR="#E5E7EB"><B>Shelver</B></TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT">- NoAllowance = 0 {const}<BR/>+ Section : string {private set}</TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT">+ Shelver(id, name, phone, hireDate, salary, section)<BR/>+ Reassign(newSection : string) : void</TD></TR></TABLE>>];
+
+  Head [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+    <TR><TD BGCOLOR="#E5E7EB"><B>HeadLibrarian</B></TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT">- ResponsibilityAllowance = 400 {const}</TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT">+ HeadLibrarian(id, name, phone, hireDate, salary)<BR/>+ ChangeLateFee(item : LibraryItem, fee : decimal) : void<BR/>+ WithdrawItem(item : LibraryItem) : void<BR/>+ RestoreItem(item : LibraryItem) : void</TD></TR></TABLE>>];
+
+  Item [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="#ECFDF5">
+    <TR><TD BGCOLOR="#A7F3D0"><I>«protected ctor»</I><BR/><B>LibraryItem</B></TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT">- _lateFeeMultiplier : decimal {readOnly}<BR/>+ CatalogNumber : string {readOnly}<BR/>+ Title : string {readOnly}<BR/>+ LoanPeriodDays : int {readOnly}<BR/>+ BaseLateFee : decimal {private set}<BR/>+ IsWithdrawn : bool {private set}<BR/>+ IsOnLoan : bool {private set}<BR/>+ DailyLateFee : decimal {computed}</TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT"># LibraryItem(catalogNo, title, baseFee, loanDays, multiplier)<BR/>~ ChangeBaseLateFee(fee : decimal) : void<BR/>~ Withdraw() : void<BR/>~ Restore() : void<BR/>~ MarkAsBorrowed() : void<BR/>~ MarkAsReturned() : void</TD></TR></TABLE>>];
+
+  Book [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+    <TR><TD BGCOLOR="#E5E7EB"><B>Book</B></TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT">- BookLoanDays = 21 {const}<BR/>- BookFeeMultiplier = 1.0 {const}</TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT">+ Book(catalogNo, title, baseFee)</TD></TR></TABLE>>];
+
+  Dvd [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+    <TR><TD BGCOLOR="#E5E7EB"><B>Dvd</B></TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT">- DvdLoanDays = 7 {const}<BR/>- DvdFeeMultiplier = 2.0 {const}</TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT">+ Dvd(catalogNo, title, baseFee)</TD></TR></TABLE>>];
+
+  Magazine [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+    <TR><TD BGCOLOR="#E5E7EB"><B>Magazine</B></TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT">- MagazineLoanDays = 3 {const}<BR/>- MagazineFeeMultiplier = 0.5 {const}</TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT">+ Magazine(catalogNo, title, baseFee)</TD></TR></TABLE>>];
+
+  Loan [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="#FFF7ED">
+    <TR><TD BGCOLOR="#FED7AA"><B>Loan</B></TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT">- _lastLoanNumber : int {static}<BR/>+ LoanId : string {readOnly}<BR/>+ BorrowDate : DateTime {readOnly}<BR/>+ Member : Member {readOnly}<BR/>+ Item : LibraryItem {readOnly}<BR/>+ Status : LoanStatus {private set}<BR/>+ ReturnDate : DateTime? {private set}<BR/>+ DueDate : DateTime {computed}<BR/>+ DaysLate : int {computed}<BR/>+ LateFee : decimal {computed}</TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT">~ Loan(member, item, borrowDate)<BR/>~ MarkReturned(returnDate : DateTime) : void<BR/>~ MarkLost() : void</TD></TR></TABLE>>];
+
+  Status [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="#FEFCE8">
+    <TR><TD BGCOLOR="#FEF08A"><I>«enumeration»</I><BR/><B>LoanStatus</B></TD></TR>
+    <TR><TD ALIGN="LEFT" BALIGN="LEFT">Borrowed<BR/>Returned<BR/>Lost</TD></TR></TABLE>>];
+
+  // inheritance (hollow triangle → parent)
+  edge [arrowhead=empty, arrowsize=1.3];
+  Member -> Person; Staff -> Person;
+  Student -> Member; Premium -> Member;
+  Librarian -> Staff; Shelver -> Staff; Head -> Staff;
+  Book -> Item; Dvd -> Item; Magazine -> Item;
+
+  // associations with multiplicity (constraint=false keeps the hierarchies tidy)
+  edge [arrowhead=vee, arrowsize=0.9, style=solid, constraint=false, labelfontsize=13, labelfontcolor="#B45309", color="#B45309", fontcolor="#B45309", penwidth=1.4];
+  Member -> Loan [taillabel="1   ", headlabel="0..*   ", label="  has history  "];
+  Loan -> Item [taillabel="*  ", headlabel="1  ", label="  lends  "];
+  edge [style=dashed, color="#6B7280", fontcolor="#6B7280", penwidth=1.0];
+  Loan -> Status [label=" «uses» "];
+  Librarian -> Loan [label=" returns / marks lost "];
+  Head -> Item [label=" prices / withdraws / restores "];
+
+  {rank=same; Person; Item;}
+  {rank=same; Member; Staff; Loan; Status;}
+}
